@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 
 export const AddTodoPage = () => {
-
     return (
         <SContainer>
             <h1>ToDoリスト</h1>
@@ -16,7 +16,9 @@ export const AddTodoPage = () => {
                         <SInput type="text"></SInput>
                     </STextbox>
                     <SButtonWrapper>
+                    <Link to="/">
                     <SButton>登録</SButton>
+                    </Link>
                     </SButtonWrapper>
                     
                 </SItemWrapper>
