@@ -20,7 +20,6 @@ export const TopPage = () => {
     axios
       .get("http://localhost:8080/")
       .then((response) => {
-        console.log(response.data);
         setTodoList(response.data);
       })
       .catch(err => {
@@ -44,7 +43,7 @@ export const TopPage = () => {
                 <STodo>{todo.todo}</STodo>
                 <SDate>{todo.kijitsu}</SDate>
                 <SButtonWrapper>
-                  <Link to="/edit">
+                  <Link to={"/edit"} state={{todo: todo.todo, kijitsu: todo.kijitsu}}>
                     <SButton>編集</SButton>
                   </Link>
                   <SButton>削除</SButton>

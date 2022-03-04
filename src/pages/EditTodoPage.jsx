@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export const EditTodoPage = () => {
+    const location = useLocation();
 
     return (
         <SContainer>
@@ -10,11 +11,11 @@ export const EditTodoPage = () => {
                 <SItemWrapper>
                     <STextbox>
                         <p>Todo内容</p>
-                        <SInput type="text"></SInput>
+                        <SInput type="text" defaultValue={location.state.todo}></SInput>
                     </STextbox>
                     <STextbox>
                         <p>期日</p>
-                        <SInput type="text"></SInput>
+                        <SInput type="text" defaultValue={location.state.kijitsu}></SInput>
                     </STextbox>
                     <SButtonWrapper>
                         <SLinkButton>
