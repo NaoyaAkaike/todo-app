@@ -17,13 +17,16 @@ export const EditTodoPage = () => {
                         <SInput type="text"></SInput>
                     </STextbox>
                     <SButtonWrapper>
-                    <Link to="/">
-                    <SButton>編集</SButton>
-                    </Link>
+                        <SLinkButton>
+                            <Link to="/">
+                                <SButton>編集</SButton>
+                            </Link>
+                        </SLinkButton>
+
                     </SButtonWrapper>
-                    
+
                 </SItemWrapper>
-                
+
             </SContentWrapper>
         </SContainer>
     );
@@ -61,6 +64,8 @@ margin-bottom: 10px;
 `
 const SButton = styled.button`
 width: 80px;
+`
+const SLinkButton = styled.div`
 margin-right: 30px;
 margin-left: auto;
 `
