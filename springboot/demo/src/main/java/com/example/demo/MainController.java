@@ -2,33 +2,36 @@ package com.example.demo;
 
 import java.util.ArrayList;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin(origins = "*") // よくわからない
 public class MainController {
-    String[] todo = {"ランニングをする","買い物に行く", "本を読む"};
-    String[] kijitsu = {"2020/07/20", "", "2020/07/23"};
-    ArrayList<DataObject> objs = new ArrayList<>();
 
-        @RequestMapping("/")
-        public ArrayList<DataObject> index() {
-            for (int i = 0; i < 3; i++){
-                objs.add(new DataObject(i, todo[i], kijitsu[i]));
-                //DataObjectの配列に格納
-            } 
-            return objs;//格納した配列
+    @RequestMapping("/")
+    public ArrayList<DataObject> index() {
+        String[] todo = { "ランニングをする", "買い物に行く", "本を読む" };//test-data
+        String[] kijitsu = { "2020/07/20", "", "2020/07/23" };//test-data
+
+        ArrayList<DataObject> objs = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            objs.add(new DataObject(i, todo[i], kijitsu[i]));
+            // DataObjectの配列に格納
         }
+        return objs;// 格納した配列
+    }
 }
 
 class DataObject {
     private int id;
     private String todo;
     private String kijitsu;
-    //private int sts;
-    //private int delete_flug;
-    //private String created_date;
-    //private String updated_date;
+    // private int sts;
+    // private int delete_flug;
+    // private String created_date;
+    // private String updated_date;
 
     public DataObject(int id, String todo, String kijitsu) {
         this.id = id;

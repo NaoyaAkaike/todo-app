@@ -1,13 +1,33 @@
 import styled from "@emotion/styled";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { EditTodoPage } from "./EditTodoPage";
 
 export const TopPage = () => {
+  /*デモ用のデータ
   const todoList = [
     {text: "ランニングをする", date: "2020/07/20"},
     {text: "買い物に行く", date: ""},
     {text: "本を読む", date: "2020/07/23"},
-  ]
+  ]*/
+  const [todoList, setTodoList] = useState([]);
+
+  useEffect(()=> {
+    url();
+  },[]);
+
+  const url = ()=> {
+    axios
+      .get("http://localhost:8080/")
+      .then((response) => {
+        console.log(response.data);
+        setTodoList(response.data);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
 
   return (
     <SContainer>
@@ -20,24 +40,24 @@ export const TopPage = () => {
 
         <SUl>
           {todoList.map((todo, index) => (
-            <li key={todo.text}>
-            <SMemoWrapper>
-              <STodo>{todo.text}</STodo>
-              <SDate>{todo.date}</SDate>
-              <SButtonWrapper>
-                <Link to="/edit">
-                  <SButton>編集</SButton>
-                </Link>
-                <SButton>削除</SButton>
-                <SButton>完了</SButton>
-              </SButtonWrapper>
-            </SMemoWrapper>
-          </li>
-          ))}          
+            <li key={todo.todo}>
+              <SMemoWrapper>
+                <STodo>{todo.todo}</STodo>
+                <SDate>{todo.kijitsu}</SDate>
+                <SButtonWrapper>
+                  <Link to="/edit">
+                    <SButton>編集</SButton>
+                  </Link>
+                  <SButton>削除</SButton>
+                  <SButton>完了</SButton>
+                </SButtonWrapper>
+              </SMemoWrapper>
+            </li>
+          ))}
         </SUl>
 
         <Link to="/add">
-              <SButton>追加</SButton>
+          <SButton>追加</SButton>
         </Link>
       </SContentWrapper>
     </SContainer>
