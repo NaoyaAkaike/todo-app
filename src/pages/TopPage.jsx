@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { EditTodoPage } from "./EditTodoPage";
 
 export const TopPage = () => {
   /*デモ用のデータ
