@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useStateIfMounted } from "use-state-if-mounted";
 
 export const TopPage = () => {
   /*デモ用のデータ
@@ -10,11 +11,8 @@ export const TopPage = () => {
     {text: "買い物に行く", date: ""},
     {text: "本を読む", date: "2020/07/23"},
   ]*/
-  const [todoList, setTodoList] = useState([]);
+  const [todoList, setTodoList] = useStateIfMounted([]);
 
-  useEffect(()=> {
-    url();
-  },[]);
 
   const url = ()=> {
     axios
@@ -26,6 +24,10 @@ export const TopPage = () => {
         console.log(err);
       })
   }
+
+  useEffect( () =>{
+    url();
+  },[todoList]);
 
   return (
     <SContainer>
