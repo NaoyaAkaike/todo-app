@@ -1,65 +1,65 @@
 package com.example.demo;
 
-import java.util.ArrayList;
+import java.sql.Date;
 
+import com.example.demo.repositories.TodoDataRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @CrossOrigin(origins = "*") // よくわからない
 public class MainController {
 
-    @RequestMapping("/")
-    public ArrayList<DataObject> index() {
-        String[] todo = { "ランニングをする", "買い物に行く", "本を読む" };//test-data
-        String[] kijitsu = { "2020/07/20", "", "2020/07/23" };//test-data
+    @Autowired
+    TodoDataRepository repository;
 
-        ArrayList<DataObject> objs = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            objs.add(new DataObject(i, todo[i], kijitsu[i]));
-            // DataObjectの配列に格納
-        }
-        return objs;// 格納した配列
-    }
-}
-
-class DataObject {
-    private int id;
-    private String todo;
-    private String kijitsu;
-    // private int sts;
-    // private int delete_flug;
-    // private String created_date;
-    // private String updated_date;
-
-    public DataObject(int id, String todo, String kijitsu) {
-        this.id = id;
-        this.todo = todo;
-        this.kijitsu = kijitsu;
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @Transactional
+    public Iterable<TodoData> show() {
+        Iterable<TodoData> list = repository.findAll();
+        return list;// 格納した配列
     }
 
-    public int getId() {
-        return this.id;
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    @Transactional(readOnly = false)
+    public ModelAndView add(ModelAndView mav) {
+        
+        //デモデータ
+        TodoData d1 = new TodoData();
+        d1.setTodo("running");
+        d1.setKijitsu(Date.valueOf("2020-07-20"));
+        d1.setSts(1);
+        d1.setDeleteFlg(0);
+        d1.setCreatedDate(Date.valueOf("2020-07-10"));
+        d1.setUpdatedDate(Date.valueOf("2020-07-15"));
+
+        TodoData d2 = new TodoData();
+        d2.setTodo("read some books");
+        d2.setKijitsu(Date.valueOf("2020-07-31"));
+        d2.setSts(1);
+        d2.setDeleteFlg(0);
+        d2.setCreatedDate(Date.valueOf("2020-07-20"));
+        d2.setUpdatedDate(Date.valueOf("2020-07-20"));
+
+
+        repository.saveAndFlush(d1);
+        repository.saveAndFlush(d2);
+        return new ModelAndView("redirect:/");// 格納した配列
     }
 
-    public void setId(int id) {
-        this.id = id;
+    @RequestMapping("/delete")
+    @Transactional
+    public void delete() {
     }
 
-    public String getTodo() {
-        return this.todo;
-    }
-
-    public void setTodo(String todo) {
-        this.todo = todo;
-    }
-
-    public String getKijitsu() {
-        return this.kijitsu;
-    }
-
-    public void setKijitsu(String kijitsu) {
-        this.kijitsu = kijitsu;
+    @RequestMapping("/edit")
+    @Transactional
+    public void edit() {
     }
 }
