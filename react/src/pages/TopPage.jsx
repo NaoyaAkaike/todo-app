@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useStateIfMounted } from "use-state-if-mounted";
 
@@ -11,8 +11,7 @@ export const TopPage = () => {
     {text: "買い物に行く", date: ""},
     {text: "本を読む", date: "2020/07/23"},
   ]*/
-  const [todoList, setTodoList] = useStateIfMounted([]);
-
+  const [todoList, setTodoList] = useState([]);
 
   const url = ()=> {
     axios
@@ -24,10 +23,25 @@ export const TopPage = () => {
         console.log(err);
       })
   }
-
   useEffect( () =>{
     url();
-  },[todoList]);
+  },[]);
+  console.log(todoList);
+
+  const handleDelete = useCallback((todo, kijitsu) => {
+    axios
+      .post("http://localhost:8080/delete",{
+        preTodo: todo,
+        preKijitsu: kijitsu        
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      url();
+  })
 
   return (
     <SContainer>
@@ -39,24 +53,25 @@ export const TopPage = () => {
         </SItemWrapper>
 
         <SUl>
-          {todoList.map((todo, index) => (
-            <li key={todo.todo}>
+          {todoList.map((list) => {     
+            return list.deleteFlg === 0 &&     
+            <li key={list.todo}>
               <SMemoWrapper>
-                <STodo>{todo.todo}</STodo>
-                <SDate>{todo.kijitsu}</SDate>
+                <STodo>{list.todo}</STodo>
+                <SDate>{list.kijitsu}</SDate>
                 <SButtonWrapper>
-                  <Link to={"/edit"} state={{todo: todo.todo, kijitsu: todo.kijitsu}}>
+                  <Link to={"/edit"} state={{todo: list.todo, kijitsu: list.kijitsu, func: url}}>
                     <SButton>編集</SButton>
                   </Link>
-                  <SButton>削除</SButton>
+                  <SButton onClick={ ()=> handleDelete(list.todo, list.kijitsu)}>削除</SButton>
                   <SButton>完了</SButton>
                 </SButtonWrapper>
               </SMemoWrapper>
             </li>
-          ))}
+          })}
         </SUl>
 
-        <Link to="/add">
+        <Link to="/add" state ={{func: url}}>
           <SButton>追加</SButton>
         </Link>
       </SContentWrapper>

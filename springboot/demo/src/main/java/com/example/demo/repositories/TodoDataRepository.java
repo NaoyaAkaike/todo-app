@@ -1,6 +1,8 @@
 package com.example.demo.repositories;
 
-import java.util.Optional;
+import java.sql.Date;
+
+import javax.transaction.Transactional;
 
 import com.example.demo.TodoData;
 
@@ -8,9 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@javax.transaction.Transactional
+@Transactional
 public interface TodoDataRepository extends JpaRepository<TodoData, Long> {
 
-    public Optional<TodoData> findById(Long todo);
+    public TodoData findByTodoAndKijitsu(String todo,Date date);
     
 }

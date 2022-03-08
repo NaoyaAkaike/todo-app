@@ -1,8 +1,41 @@
 import styled from "@emotion/styled";
+import axios from "axios";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 export const EditTodoPage = () => {
     const location = useLocation();
+    console.log(location.state.todo);
+    console.log(location.state.kijitsu);
+
+    const [ todo, setTodo ] = useState("");
+    const [ date, setDate ] = useState("");
+
+    const onChangeTodo = (e)=> {
+        setTodo(e.target.value);
+    }
+
+    const onChangeDate = (e)=> {
+        setDate(e.target.value);
+    }
+
+    const handleEdit = () => {
+        axios
+        .post("http://localhost:8080/edit",{
+            preTodo: location.state.todo,
+            preKijitsu: location.state.kijitsu,
+            todo: todo,
+            kijitsu: date
+        })
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+
+        location.state.func();
+    }
 
     return (
         <SContainer>
@@ -11,15 +44,25 @@ export const EditTodoPage = () => {
                 <SItemWrapper>
                     <STextbox>
                         <p>Todo内容</p>
-                        <SInput type="text" defaultValue={location.state.todo}></SInput>
+                        <SInput
+                        type="text"
+                        defaultValue={location.state.todo}
+                        //value={todo}
+                        onChange={onChangeTodo}
+                        ></SInput>
                     </STextbox>
                     <STextbox>
                         <p>期日</p>
-                        <SInput type="text" defaultValue={location.state.kijitsu}></SInput>
+                        <SInput
+                        type="text"
+                        defaultValue={location.state.kijitsu}
+                        //value={date}
+                        onChange={onChangeDate}
+                        ></SInput>
                     </STextbox>
                     <SButtonWrapper>
                         <SLinkButton>
-                            <Link to="/">
+                            <Link to="/" onClick={handleEdit}>
                                 <SButton>編集</SButton>
                             </Link>
                         </SLinkButton>

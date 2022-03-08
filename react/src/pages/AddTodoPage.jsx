@@ -1,9 +1,11 @@
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export const AddTodoPage = () => {
+
+    const location = useLocation();
 
     const [ todo, setTodo ] = useState("");
     const [ date, setDate ] = useState("");
@@ -28,6 +30,7 @@ export const AddTodoPage = () => {
         .catch((error) => {
             console.log(error);
         });
+        location.state.func();
     }
 
     return (
@@ -38,16 +41,17 @@ export const AddTodoPage = () => {
                     <STextbox>
                         <p>Todo内容</p>
                         <SInput
-                            type="text"
-                            value={todo}
-                            onChange={onChangeTodo}></SInput>
+                        type="text"
+                        value={todo}
+                        onChange={onChangeTodo}
+                        ></SInput>
                     </STextbox>
                     <STextbox>
                         <p>期日</p>
                         <SInput
-                            type="text"
-                            value={date}
-                            onChange={onChangeDate}></SInput>
+                        type="text"
+                        value={date}
+                        onChange={onChangeDate}></SInput>
                     </STextbox>
                     <SButtonWrapper>
                         <SLinkButton>

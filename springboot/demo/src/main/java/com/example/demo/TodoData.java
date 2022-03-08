@@ -18,7 +18,7 @@ public class TodoData {
     @Column
     private long id;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 200, nullable = false)
     private String todo;
 
     @Column(nullable = true)

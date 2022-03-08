@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @CrossOrigin("*")
@@ -25,16 +24,17 @@ public class MainController {
     @Transactional
     public Iterable<TodoData> show() {
         Iterable<TodoData> list = repository.findAll();
-        return list;// 格納した配列
+        return list;
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @Transactional(readOnly = false)
-    public ModelAndView add(@RequestBody Parameter param,ModelAndView mav) {
-        
+    public void add(@RequestBody Param param) {
+        //受け取ったオブジェクト
         String todo = param.getTodo();
         String kijitsu = param.getKijitsu();
-        
+
+        //データベースに追加
         TodoData data = new TodoData();
         data.setTodo(todo);
         data.setKijitsu(Date.valueOf(kijitsu));
@@ -43,29 +43,53 @@ public class MainController {
         data.setCreatedDate(Date.valueOf(LocalDate.now()));
         data.setUpdatedDate(Date.valueOf(LocalDate.now()));
         repository.saveAndFlush(data);
-        return new ModelAndView("redirect:/");
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    @Transactional(readOnly = false)
+    public void edit(@RequestBody Param param) {
+        //受け取ったオブジェクト
+        String todo = param.getTodo();
+        Date kijitsu = Date.valueOf(param.getKijitsu());
+        String preTodo = param.getPreTodo();
+        Date preKijitsu = Date.valueOf(param.getPreKijitsu());
+        
+        //データベースに追加
+        TodoData data = repository.findByTodoAndKijitsu(preTodo,preKijitsu);
+        data.setTodo(todo);
+        data.setKijitsu(kijitsu);   
+        repository.saveAndFlush(data);     
     }
 
     @RequestMapping("/delete")
-    @Transactional
-    public void delete() {
+    @Transactional(readOnly = false)
+    public void delete(@RequestBody Param param) {
+        String preTodo = param.getPreTodo();
+        Date preKijitsu = Date.valueOf(param.getPreKijitsu());
+
+        TodoData data = repository.findByTodoAndKijitsu(preTodo, preKijitsu);
+        data.setDeleteFlg(1);
+        repository.saveAndFlush(data);
     }
 
-    @RequestMapping("/edit")
-    @Transactional
-    public void edit() {
-    }
-
-
-    static class Parameter {
+    
+    static class Param {
         private String todo;
         private String kijitsu;
+        private String preTodo;
+        private String preKijitsu;
 
         public String getTodo() {
             return this.todo;
         }
         public String getKijitsu() {
             return this.kijitsu;
+        }
+        public String getPreTodo() {
+            return this.preTodo;
+        }
+        public String getPreKijitsu() {
+            return this.preKijitsu;
         }
     }
 }
