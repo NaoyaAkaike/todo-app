@@ -57,7 +57,8 @@ public class MainController {
         //データベースに追加
         TodoData data = repository.findByTodoAndKijitsu(preTodo,preKijitsu);
         data.setTodo(todo);
-        data.setKijitsu(kijitsu);   
+        data.setKijitsu(kijitsu);
+        data.setUpdatedDate(Date.valueOf(LocalDate.now()));
         repository.saveAndFlush(data);     
     }
 

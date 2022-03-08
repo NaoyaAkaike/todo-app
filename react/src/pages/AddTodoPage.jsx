@@ -1,11 +1,12 @@
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useGetList } from "../hooks/useGetList";
 
 export const AddTodoPage = () => {
 
-    const location = useLocation();
+    const { url } = useGetList();
 
     const [ todo, setTodo ] = useState("");
     const [ date, setDate ] = useState("");
@@ -26,11 +27,11 @@ export const AddTodoPage = () => {
         })
         .then((response) => {
             console.log(response);
+            url();
         })
         .catch((error) => {
             console.log(error);
-        });
-        location.state.func();
+        });        
     }
 
     return (
@@ -51,7 +52,8 @@ export const AddTodoPage = () => {
                         <SInput
                         type="text"
                         value={date}
-                        onChange={onChangeDate}></SInput>
+                        onChange={onChangeDate}
+                        ></SInput>
                     </STextbox>
                     <SButtonWrapper>
                         <SLinkButton>

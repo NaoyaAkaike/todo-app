@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useStateIfMounted } from "use-state-if-mounted";
+import { useGetList } from "../hooks/useGetList";
 
 export const TopPage = () => {
   /*デモ用のデータ
@@ -11,24 +11,13 @@ export const TopPage = () => {
     {text: "買い物に行く", date: ""},
     {text: "本を読む", date: "2020/07/23"},
   ]*/
-  const [todoList, setTodoList] = useState([]);
-
-  const url = ()=> {
-    axios
-      .get("http://localhost:8080/")
-      .then((response) => {
-        setTodoList(response.data);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }
+  const { todoList, url } = useGetList();
+  
   useEffect( () =>{
     url();
   },[]);
-  console.log(todoList);
 
-  const handleDelete = useCallback((todo, kijitsu) => {
+  const handleDelete = (todo, kijitsu) => {
     axios
       .post("http://localhost:8080/delete",{
         preTodo: todo,
@@ -36,12 +25,13 @@ export const TopPage = () => {
       })
       .then((response) => {
         console.log(response);
+        url();
       })
       .catch(err => {
         console.log(err);
-      })
-      url();
-  })
+      })      
+  }
+  console.log(todoList);
 
   return (
     <SContainer>
@@ -60,7 +50,7 @@ export const TopPage = () => {
                 <STodo>{list.todo}</STodo>
                 <SDate>{list.kijitsu}</SDate>
                 <SButtonWrapper>
-                  <Link to={"/edit"} state={{todo: list.todo, kijitsu: list.kijitsu, func: url}}>
+                  <Link to={"/edit"} state={{todo: list.todo, kijitsu: list.kijitsu }}>
                     <SButton>編集</SButton>
                   </Link>
                   <SButton onClick={ ()=> handleDelete(list.todo, list.kijitsu)}>削除</SButton>
@@ -71,7 +61,7 @@ export const TopPage = () => {
           })}
         </SUl>
 
-        <Link to="/add" state ={{func: url}}>
+        <Link to="/add">
           <SButton>追加</SButton>
         </Link>
       </SContentWrapper>

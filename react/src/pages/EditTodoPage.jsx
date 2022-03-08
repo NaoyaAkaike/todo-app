@@ -1,15 +1,21 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useStateIfMounted } from "use-state-if-mounted";
+import { useGetList } from "../hooks/useGetList";
 
 export const EditTodoPage = () => {
+    const { url } = useGetList();
     const location = useLocation();
-    console.log(location.state.todo);
-    console.log(location.state.kijitsu);
 
-    const [ todo, setTodo ] = useState("");
-    const [ date, setDate ] = useState("");
+    const [ todo, setTodo ] = useStateIfMounted("");
+    const [ date, setDate ] = useStateIfMounted("");
+
+    useEffect(()=> {
+        setTodo(location.state.todo);
+        setDate(location.state.kijitsu);
+    },[]);
 
     const onChangeTodo = (e)=> {
         setTodo(e.target.value);
@@ -18,6 +24,8 @@ export const EditTodoPage = () => {
     const onChangeDate = (e)=> {
         setDate(e.target.value);
     }
+    console.log(location.state.todo);
+    console.log(location.state.kijitsu);
 
     const handleEdit = () => {
         axios
@@ -29,12 +37,11 @@ export const EditTodoPage = () => {
         })
         .then((response) => {
             console.log(response);
+            url();
         })
         .catch((error) => {
             console.log(error);
-        });
-
-        location.state.func();
+        });        
     }
 
     return (
@@ -46,8 +53,8 @@ export const EditTodoPage = () => {
                         <p>Todo内容</p>
                         <SInput
                         type="text"
-                        defaultValue={location.state.todo}
-                        //value={todo}
+                        //defaultValue={location.state.todo}
+                        value={todo}
                         onChange={onChangeTodo}
                         ></SInput>
                     </STextbox>
@@ -55,8 +62,8 @@ export const EditTodoPage = () => {
                         <p>期日</p>
                         <SInput
                         type="text"
-                        defaultValue={location.state.kijitsu}
-                        //value={date}
+                        //defaultValue={location.state.kijitsu}
+                        value={date}
                         onChange={onChangeDate}
                         ></SInput>
                     </STextbox>
