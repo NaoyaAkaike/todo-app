@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react"
-
+/*
 export const useGetList = () => {
     const [ todoList, setTodoList ] = useState([]);
 
@@ -13,7 +13,7 @@ export const useGetList = () => {
           .catch(err => {
             console.log(err);
           })
-      }
+    }
 
-      return { todoList, getList }
-}
+      return { todoList, setTodoList, getList }
+}*/

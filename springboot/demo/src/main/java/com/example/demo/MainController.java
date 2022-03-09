@@ -12,10 +12,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @CrossOrigin("*")
 public class MainController {
+
+    private boolean isCompleted = true;
+    private boolean isDeleted = true;
+    public int boolToInt(boolean a) {
+        if(a)
+            return 1;
+            return 0;
+    }
 
     @Autowired
     TodoDataRepository repository;
@@ -31,7 +40,7 @@ public class MainController {
     //追加メソッド
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @Transactional(readOnly = false)
-    public void add(@RequestBody Param param) {
+    public ModelAndView add(@RequestBody Param param) {
         //受け取ったオブジェクト
         String todo = param.getTodo();
         String kijitsu = param.getKijitsu();
@@ -40,17 +49,18 @@ public class MainController {
         TodoData data = new TodoData();
         data.setTodo(todo);
         data.setKijitsu(Date.valueOf(kijitsu));
-        data.setSts(0);
-        data.setDeleteFlg(0);
+        data.setSts(boolToInt(!isCompleted));
+        data.setDeleteFlg(boolToInt(!isDeleted));
         data.setCreatedDate(Date.valueOf(LocalDate.now()));
         data.setUpdatedDate(Date.valueOf(LocalDate.now()));
         repository.saveAndFlush(data);
+        return new ModelAndView("redirect:/");
     }
 
     //編集メソッド
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @Transactional(readOnly = false)
-    public void edit(@RequestBody Param param) {
+    public ModelAndView edit(@RequestBody Param param) {
         //受け取ったオブジェクト
         String todo = param.getTodo();
         Date kijitsu = Date.valueOf(param.getKijitsu());
@@ -62,7 +72,8 @@ public class MainController {
         data.setTodo(todo);
         data.setKijitsu(kijitsu);
         data.setUpdatedDate(Date.valueOf(LocalDate.now()));
-        repository.saveAndFlush(data);     
+        repository.saveAndFlush(data);
+        return new ModelAndView("redirect:/");  
     }
 
     //削除メソッド
@@ -73,7 +84,7 @@ public class MainController {
         Date preKijitsu = Date.valueOf(param.getPreKijitsu());
 
         TodoData data = repository.findByTodoAndKijitsu(preTodo, preKijitsu);
-        data.setDeleteFlg(1);
+        data.setDeleteFlg(boolToInt(isDeleted));
         data.setUpdatedDate(Date.valueOf(LocalDate.now()));
         repository.saveAndFlush(data);
     }
@@ -86,30 +97,8 @@ public class MainController {
         Date preKijitsu = Date.valueOf(param.getPreKijitsu());
 
         TodoData data = repository.findByTodoAndKijitsu(preTodo, preKijitsu);
-        data.setSts(1);
+        data.setSts(boolToInt(isCompleted));
         data.setUpdatedDate(Date.valueOf(LocalDate.now()));
         repository.saveAndFlush(data);
-    }
-
-
-    
-    static class Param {
-        private String todo;
-        private String kijitsu;
-        private String preTodo;
-        private String preKijitsu;
-
-        public String getTodo() {
-            return this.todo;
-        }
-        public String getKijitsu() {
-            return this.kijitsu;
-        }
-        public String getPreTodo() {
-            return this.preTodo;
-        }
-        public String getPreKijitsu() {
-            return this.preKijitsu;
-        }
-    }
+    }    
 }

@@ -3,7 +3,6 @@ import axios from "axios";
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useStateIfMounted } from "use-state-if-mounted";
-import { useGetList } from "../hooks/useGetList";
 
 export const EditTodoPage = () => {
     const location = useLocation();
@@ -23,8 +22,6 @@ export const EditTodoPage = () => {
     const onChangeDate = (e)=> {
         setDate(e.target.value);
     }
-    console.log(location.state.todo);
-    console.log(location.state.kijitsu);
 
     const handleEdit = () => {
         axios

@@ -6,13 +6,13 @@ import { TopPage } from "./pages/TopPage";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<TopPage />} />
-        <Route path="/add" element={<AddTodoPage />} />
-        <Route path="/edit" element={<EditTodoPage />} />
-      </Routes>
-  </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<TopPage />} />
+          <Route path="/add" element={<AddTodoPage />} />
+          <Route path="/edit" element={<EditTodoPage />} />
+        </Routes>
+      </BrowserRouter>
   );
 }
 export default App;

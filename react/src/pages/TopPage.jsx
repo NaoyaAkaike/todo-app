@@ -1,17 +1,48 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import { useEffect } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { Link } from "react-router-dom";
-import { useGetList } from "../hooks/useGetList";
+import React, { useCallback, useEffect, useState } from "react";
 
 export const TopPage = () => {
 
-  const { todoList, getList } = useGetList();
-  
-  useEffect( () =>{
-    getList();
-  },[]);
+  const [ todoList, setTodoList ] = useState([]);
 
+  const getList = ()=> {
+    
+    axios
+      .get("http://localhost:8080/")
+      .then((response) => {
+        console.log(response.data);
+        setTodoList(response.data);
+        console.log(todoList);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  useEffect(() => {
+      console.log("initial load A");
+      getList();
+
+      return ()=> {
+        console.log('clean up A');
+      }
+    },[]);
+
+/*
+  useFocusEffect(
+    useCallback(() => {
+      console.log("initial load A");
+      getList();
+
+      return ()=> {
+        console.log('clean up A');
+      }
+    },[])
+  );
+*/
   const handleDelete = (todo, kijitsu) => {
     axios
       .post("http://localhost:8080/delete",{
@@ -41,7 +72,7 @@ export const TopPage = () => {
         console.log(err);
       })      
   }
-  console.log(todoList);
+  
 
   return (
     <SContainer>
@@ -53,6 +84,7 @@ export const TopPage = () => {
         </SItemWrapper>
 
         <SUl>
+          {console.log(todoList)}
           {todoList.map((list) => {     
             return list.deleteFlg === 0 &&     
             <li key={list.todo}>
