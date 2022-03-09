@@ -1,59 +1,15 @@
 import styled from "@emotion/styled";
-import axios from "axios";
-import { useFocusEffect } from "@react-navigation/native";
 import { Link } from "react-router-dom";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useAxios } from "../hooks/useAxios";
 
 export const TopPage = () => {
 
-  const [ todoList, setTodoList ] = useState([]);
-
-  const getList = ()=> {
-    
-    axios
-      .get("http://localhost:8080/")
-      .then((response) => {
-        setTodoList(response.data);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }
+  const { todoList, getList, handleDelete, handleDone } = useAxios();
 
   useEffect(() => {
       getList();
-    },[]);
-
-  const handleDelete = (todo, kijitsu) => {
-    axios
-      .post("http://localhost:8080/delete",{
-        preTodo: todo,
-        preKijitsu: kijitsu        
-      })
-      .then((response) => {
-        console.log(response);
-        getList();
-      })
-      .catch(err => {
-        console.log(err);
-      })      
-  }
-
-  const handleDone = (todo, kijitsu) => {
-    axios
-      .post("http://localhost:8080/done",{
-        preTodo: todo,
-        preKijitsu: kijitsu        
-      })
-      .then((response) => {
-        console.log(response);
-        getList();
-      })
-      .catch(err => {
-        console.log(err);
-      })      
-  }
-  
+    },[]);  
 
   return (
     <SContainer>

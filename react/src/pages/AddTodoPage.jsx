@@ -1,12 +1,11 @@
 import styled from "@emotion/styled";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
 import { useStateIfMounted } from "use-state-if-mounted";
+import { useAxios } from "../hooks/useAxios";
 
 export const AddTodoPage = () => {
 
-    const navigate = useNavigate();
-
+    const { handleAdd } =useAxios();
     const [todo, setTodo] = useStateIfMounted("");
     const [date, setDate] = useStateIfMounted("");
 
@@ -16,21 +15,6 @@ export const AddTodoPage = () => {
 
     const onChangeDate = (e) => {
         setDate(e.target.value);
-    }
-
-    const handleAdd = () => {
-        axios
-            .post("http://localhost:8080/add", {
-                todo: todo,
-                kijitsu: date
-            })
-            .then((response) => {
-                console.log(response);
-                navigate("../");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
     }
 
     return (
@@ -56,7 +40,7 @@ export const AddTodoPage = () => {
                     </STextbox>
                     <SButtonWrapper>
                         <SLinkButton>
-                            <SButton onClick={handleAdd}>登録</SButton>
+                            <SButton onClick={useCallback(()=> handleAdd(todo, date))}>登録</SButton>
                         </SLinkButton>
 
                     </SButtonWrapper>

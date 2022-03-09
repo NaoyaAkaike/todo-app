@@ -1,13 +1,12 @@
 import styled from "@emotion/styled";
-import axios from "axios";
-import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useCallback, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useStateIfMounted } from "use-state-if-mounted";
+import { useAxios } from "../hooks/useAxios";
 
 export const EditTodoPage = () => {
     const location = useLocation();
-    const navigate = useNavigate();
-
+    const { handleEdit } = useAxios();
     const [todo, setTodo] = useStateIfMounted("");
     const [date, setDate] = useStateIfMounted("");
 
@@ -24,24 +23,6 @@ export const EditTodoPage = () => {
         setDate(e.target.value);
     }
 
-    const handleEdit = () => {
-        
-        axios
-            .post("http://localhost:8080/edit", {
-                preTodo: location.state.todo,
-                preKijitsu: location.state.kijitsu,
-                todo: todo,
-                kijitsu: date
-            })
-            .then((response) => {
-                console.log(response);
-                navigate("../");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
     return (
         <SContainer>
             <h1>ToDoリスト</h1>
@@ -51,7 +32,6 @@ export const EditTodoPage = () => {
                         <p>Todo内容</p>
                         <SInput
                             type="text"
-                            //defaultValue={location.state.todo}
                             value={todo}
                             onChange={onChangeTodo}
                         ></SInput>
@@ -60,14 +40,18 @@ export const EditTodoPage = () => {
                         <p>期日</p>
                         <SInput
                             type="text"
-                            //defaultValue={location.state.kijitsu}
                             value={date}
                             onChange={onChangeDate}
                         ></SInput>
                     </STextbox>
                     <SButtonWrapper>
                         <SLinkButton>
-                            <SButton onClick={handleEdit}>編集</SButton>
+                            <SButton
+                                onClick={useCallback(()=>handleEdit(
+                                    location.state.todo,
+                                    location.state.kijitsu,
+                                    todo, date))}
+                            >編集</SButton>
                         </SLinkButton>
 
                     </SButtonWrapper>
