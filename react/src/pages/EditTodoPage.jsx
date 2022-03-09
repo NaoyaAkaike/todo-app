@@ -6,7 +6,6 @@ import { useStateIfMounted } from "use-state-if-mounted";
 import { useGetList } from "../hooks/useGetList";
 
 export const EditTodoPage = () => {
-    const { url } = useGetList();
     const location = useLocation();
 
     const [ todo, setTodo ] = useStateIfMounted("");
@@ -37,7 +36,6 @@ export const EditTodoPage = () => {
         })
         .then((response) => {
             console.log(response);
-            url();
         })
         .catch((error) => {
             console.log(error);

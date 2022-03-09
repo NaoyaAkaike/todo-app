@@ -20,6 +20,7 @@ public class MainController {
     @Autowired
     TodoDataRepository repository;
 
+    //全リスト
     @RequestMapping(value = "/", method = RequestMethod.GET)
     @Transactional
     public Iterable<TodoData> show() {
@@ -27,6 +28,7 @@ public class MainController {
         return list;
     }
 
+    //追加メソッド
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @Transactional(readOnly = false)
     public void add(@RequestBody Param param) {
@@ -45,6 +47,7 @@ public class MainController {
         repository.saveAndFlush(data);
     }
 
+    //編集メソッド
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @Transactional(readOnly = false)
     public void edit(@RequestBody Param param) {
@@ -62,6 +65,7 @@ public class MainController {
         repository.saveAndFlush(data);     
     }
 
+    //削除メソッド
     @RequestMapping("/delete")
     @Transactional(readOnly = false)
     public void delete(@RequestBody Param param) {
@@ -70,8 +74,23 @@ public class MainController {
 
         TodoData data = repository.findByTodoAndKijitsu(preTodo, preKijitsu);
         data.setDeleteFlg(1);
+        data.setUpdatedDate(Date.valueOf(LocalDate.now()));
         repository.saveAndFlush(data);
     }
+
+    //完了メソッド
+    @RequestMapping("/done")
+    @Transactional(readOnly = false)
+    public void done(@RequestBody Param param) {
+        String preTodo = param.getPreTodo();
+        Date preKijitsu = Date.valueOf(param.getPreKijitsu());
+
+        TodoData data = repository.findByTodoAndKijitsu(preTodo, preKijitsu);
+        data.setSts(1);
+        data.setUpdatedDate(Date.valueOf(LocalDate.now()));
+        repository.saveAndFlush(data);
+    }
+
 
     
     static class Param {

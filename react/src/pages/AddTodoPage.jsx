@@ -1,15 +1,12 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useGetList } from "../hooks/useGetList";
+import { useStateIfMounted } from "use-state-if-mounted";
 
 export const AddTodoPage = () => {
 
-    const { url } = useGetList();
-
-    const [ todo, setTodo ] = useState("");
-    const [ date, setDate ] = useState("");
+    const [ todo, setTodo ] = useStateIfMounted("");
+    const [ date, setDate ] = useStateIfMounted("");
 
     const onChangeTodo = (e)=> {
         setTodo(e.target.value);
@@ -27,7 +24,6 @@ export const AddTodoPage = () => {
         })
         .then((response) => {
             console.log(response);
-            url();
         })
         .catch((error) => {
             console.log(error);

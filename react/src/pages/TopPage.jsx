@@ -5,16 +5,11 @@ import { Link } from "react-router-dom";
 import { useGetList } from "../hooks/useGetList";
 
 export const TopPage = () => {
-  /*デモ用のデータ
-  const todoList = [
-    {text: "ランニングをする", date: "2020/07/20"},
-    {text: "買い物に行く", date: ""},
-    {text: "本を読む", date: "2020/07/23"},
-  ]*/
-  const { todoList, url } = useGetList();
+
+  const { todoList, getList } = useGetList();
   
   useEffect( () =>{
-    url();
+    getList();
   },[]);
 
   const handleDelete = (todo, kijitsu) => {
@@ -25,7 +20,22 @@ export const TopPage = () => {
       })
       .then((response) => {
         console.log(response);
-        url();
+        getList();
+      })
+      .catch(err => {
+        console.log(err);
+      })      
+  }
+
+  const handleDone = (todo, kijitsu) => {
+    axios
+      .post("http://localhost:8080/done",{
+        preTodo: todo,
+        preKijitsu: kijitsu        
+      })
+      .then((response) => {
+        console.log(response);
+        getList();
       })
       .catch(err => {
         console.log(err);
@@ -46,7 +56,9 @@ export const TopPage = () => {
           {todoList.map((list) => {     
             return list.deleteFlg === 0 &&     
             <li key={list.todo}>
-              <SMemoWrapper>
+              {list.sts === 0
+            //未完了の場合
+            ? <SMemoWrapper>
                 <STodo>{list.todo}</STodo>
                 <SDate>{list.kijitsu}</SDate>
                 <SButtonWrapper>
@@ -54,9 +66,22 @@ export const TopPage = () => {
                     <SButton>編集</SButton>
                   </Link>
                   <SButton onClick={ ()=> handleDelete(list.todo, list.kijitsu)}>削除</SButton>
-                  <SButton>完了</SButton>
+                  <SButton onClick={ ()=> handleDone(list.todo, list.kijitsu) }>完了</SButton>
                 </SButtonWrapper>
               </SMemoWrapper>
+            //完了の場合
+            : <SMemoWrapper>
+                <STodo><strike>{list.todo}</strike></STodo>
+                <SDate><strike>{list.kijitsu}</strike></SDate>
+                <SButtonWrapper>
+                  <Link to={"/edit"} state={{todo: list.todo, kijitsu: list.kijitsu }}>
+                    <SButton>編集</SButton>
+                  </Link>
+                  <SButton onClick={ ()=> handleDelete(list.todo, list.kijitsu)}>削除</SButton>
+                  <SButton onClick={ ()=> handleDone(list.todo, list.kijitsu) } disabled>完了</SButton>
+                </SButtonWrapper>
+              </SMemoWrapper>
+            }
             </li>
           })}
         </SUl>

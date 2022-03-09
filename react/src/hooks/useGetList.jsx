@@ -2,9 +2,9 @@ import axios from "axios";
 import { useState } from "react"
 
 export const useGetList = () => {
-    const [todoList, setTodoList] = useState([]);
+    const [ todoList, setTodoList ] = useState([]);
 
-    const url = ()=> {
+    const getList = ()=> {
         axios
           .get("http://localhost:8080/")
           .then((response) => {
@@ -15,5 +15,5 @@ export const useGetList = () => {
           })
       }
 
-      return { todoList, setTodoList, url }
+      return { todoList, getList }
 }
