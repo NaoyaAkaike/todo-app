@@ -1,42 +1,45 @@
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useStateIfMounted } from "use-state-if-mounted";
 
 export const EditTodoPage = () => {
     const location = useLocation();
+    const navigate = useNavigate();
 
-    const [ todo, setTodo ] = useStateIfMounted("");
-    const [ date, setDate ] = useStateIfMounted("");
+    const [todo, setTodo] = useStateIfMounted("");
+    const [date, setDate] = useStateIfMounted("");
 
-    useEffect(()=> {
+    useEffect(() => {
         setTodo(location.state.todo);
         setDate(location.state.kijitsu);
-    },[]);
+    }, []);
 
-    const onChangeTodo = (e)=> {
+    const onChangeTodo = (e) => {
         setTodo(e.target.value);
     }
 
-    const onChangeDate = (e)=> {
+    const onChangeDate = (e) => {
         setDate(e.target.value);
     }
 
     const handleEdit = () => {
+        
         axios
-        .post("http://localhost:8080/edit",{
-            preTodo: location.state.todo,
-            preKijitsu: location.state.kijitsu,
-            todo: todo,
-            kijitsu: date
-        })
-        .then((response) => {
-            console.log(response);
-        })
-        .catch((error) => {
-            console.log(error);
-        });        
+            .post("http://localhost:8080/edit", {
+                preTodo: location.state.todo,
+                preKijitsu: location.state.kijitsu,
+                todo: todo,
+                kijitsu: date
+            })
+            .then((response) => {
+                console.log(response);
+                navigate("../");
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     return (
@@ -47,26 +50,24 @@ export const EditTodoPage = () => {
                     <STextbox>
                         <p>Todo内容</p>
                         <SInput
-                        type="text"
-                        //defaultValue={location.state.todo}
-                        value={todo}
-                        onChange={onChangeTodo}
+                            type="text"
+                            //defaultValue={location.state.todo}
+                            value={todo}
+                            onChange={onChangeTodo}
                         ></SInput>
                     </STextbox>
                     <STextbox>
                         <p>期日</p>
                         <SInput
-                        type="text"
-                        //defaultValue={location.state.kijitsu}
-                        value={date}
-                        onChange={onChangeDate}
+                            type="text"
+                            //defaultValue={location.state.kijitsu}
+                            value={date}
+                            onChange={onChangeDate}
                         ></SInput>
                     </STextbox>
                     <SButtonWrapper>
                         <SLinkButton>
-                            <Link to="/" onClick={handleEdit}>
-                                <SButton>編集</SButton>
-                            </Link>
+                            <SButton onClick={handleEdit}>編集</SButton>
                         </SLinkButton>
 
                     </SButtonWrapper>

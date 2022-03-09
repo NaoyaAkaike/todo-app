@@ -1,33 +1,36 @@
 import styled from "@emotion/styled";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useStateIfMounted } from "use-state-if-mounted";
 
 export const AddTodoPage = () => {
 
-    const [ todo, setTodo ] = useStateIfMounted("");
-    const [ date, setDate ] = useStateIfMounted("");
+    const navigate = useNavigate();
 
-    const onChangeTodo = (e)=> {
+    const [todo, setTodo] = useStateIfMounted("");
+    const [date, setDate] = useStateIfMounted("");
+
+    const onChangeTodo = (e) => {
         setTodo(e.target.value);
     }
 
-    const onChangeDate = (e)=> {
+    const onChangeDate = (e) => {
         setDate(e.target.value);
     }
 
     const handleAdd = () => {
         axios
-        .post("http://localhost:8080/add",{
-            todo: todo,
-            kijitsu:  date
-        })
-        .then((response) => {
-            console.log(response);
-        })
-        .catch((error) => {
-            console.log(error);
-        });        
+            .post("http://localhost:8080/add", {
+                todo: todo,
+                kijitsu: date
+            })
+            .then((response) => {
+                console.log(response);
+                navigate("../");
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     return (
@@ -38,24 +41,22 @@ export const AddTodoPage = () => {
                     <STextbox>
                         <p>Todo内容</p>
                         <SInput
-                        type="text"
-                        value={todo}
-                        onChange={onChangeTodo}
+                            type="text"
+                            value={todo}
+                            onChange={onChangeTodo}
                         ></SInput>
                     </STextbox>
                     <STextbox>
                         <p>期日</p>
                         <SInput
-                        type="text"
-                        value={date}
-                        onChange={onChangeDate}
+                            type="text"
+                            value={date}
+                            onChange={onChangeDate}
                         ></SInput>
                     </STextbox>
                     <SButtonWrapper>
                         <SLinkButton>
-                            <Link to="/" onClick={handleAdd}>
-                                <SButton>登録</SButton>
-                            </Link>
+                            <SButton onClick={handleAdd}>登録</SButton>
                         </SLinkButton>
 
                     </SButtonWrapper>

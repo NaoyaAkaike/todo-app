@@ -13,9 +13,7 @@ export const TopPage = () => {
     axios
       .get("http://localhost:8080/")
       .then((response) => {
-        console.log(response.data);
         setTodoList(response.data);
-        console.log(todoList);
       })
       .catch(err => {
         console.log(err);
@@ -23,26 +21,9 @@ export const TopPage = () => {
   }
 
   useEffect(() => {
-      console.log("initial load A");
       getList();
-
-      return ()=> {
-        console.log('clean up A');
-      }
     },[]);
 
-/*
-  useFocusEffect(
-    useCallback(() => {
-      console.log("initial load A");
-      getList();
-
-      return ()=> {
-        console.log('clean up A');
-      }
-    },[])
-  );
-*/
   const handleDelete = (todo, kijitsu) => {
     axios
       .post("http://localhost:8080/delete",{
@@ -84,10 +65,9 @@ export const TopPage = () => {
         </SItemWrapper>
 
         <SUl>
-          {console.log(todoList)}
-          {todoList.map((list) => {     
+          {todoList.map((list, index) => {     
             return list.deleteFlg === 0 &&     
-            <li key={list.todo}>
+            <li key={index}>
               {list.sts === 0
             //未完了の場合
             ? <SMemoWrapper>
