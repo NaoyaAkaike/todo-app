@@ -34,16 +34,19 @@ export const useAxios = () => {
       });
   }
   //編集メソッド
-  const handleEdit = (preTodo, preDate, todo, date) => {
+  const handleEdit = (id, todo, date) => {
     axios
       .post("http://localhost:8080/edit", {
-        preTodo: preTodo,
-        preKijitsu: preDate,
+        id: id,
         todo: todo,
         kijitsu: date
       })
       .then((response) => {
         console.log(response);
+        console.log("id:" + id);
+        console.log("todo:" + todo);
+        console.log("date:" + date);
+
         navigate("../");
       })
       .catch((error) => {
@@ -51,11 +54,10 @@ export const useAxios = () => {
       });
   }
   //削除メソッド
-  const handleDelete = (todo, kijitsu) => {
+  const handleDelete = (id) => {
     axios
       .post("http://localhost:8080/delete", {
-        preTodo: todo,
-        preKijitsu: kijitsu
+        id: id
       })
       .then((response) => {
         console.log(response);
@@ -66,11 +68,10 @@ export const useAxios = () => {
       })
   }
   //完了メソッド
-  const handleDone = (todo, kijitsu) => {
+  const handleDone = (id) => {
     axios
       .post("http://localhost:8080/done", {
-        preTodo: todo,
-        preKijitsu: kijitsu
+        id: id
       })
       .then((response) => {
         console.log(response);

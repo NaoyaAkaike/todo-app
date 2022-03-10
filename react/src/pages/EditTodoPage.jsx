@@ -57,8 +57,7 @@ export const EditTodoPage = () => {
                         <SLinkButton>
                             <SButton
                                 onClick={useCallback(()=>handleEdit(
-                                    location.state.todo,
-                                    location.state.kijitsu,
+                                    location.state.id,
                                     todo, date))}
                             >編集</SButton>
                         </SLinkButton>

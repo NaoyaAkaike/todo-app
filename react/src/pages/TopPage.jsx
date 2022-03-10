@@ -23,18 +23,18 @@ export const TopPage = () => {
         <SUl>
           {todoList.map((list, index) => {     
             return list.deleteFlg === 0 &&     
-            <li key={index}>
+            <li key={list.id}>
               {list.sts === 0
             //未完了の場合
             ? <SMemoWrapper>
                 <STodo>{list.todo}</STodo>
                 <SDate>{list.kijitsu}</SDate>
                 <SButtonWrapper>
-                  <Link to={"/edit"} state={{todo: list.todo, kijitsu: list.kijitsu }}>
+                  <Link to={"/edit"} state={{id: list.id, todo: list.todo, kijitsu: list.kijitsu }}>
                     <SButton>編集</SButton>
                   </Link>
-                  <SButton onClick={ ()=> handleDelete(list.todo, list.kijitsu)}>削除</SButton>
-                  <SButton onClick={ ()=> handleDone(list.todo, list.kijitsu) }>完了</SButton>
+                  <SButton onClick={ ()=> handleDelete(list.id)}>削除</SButton>
+                  <SButton onClick={ ()=> handleDone(list.id)}>完了</SButton>
                 </SButtonWrapper>
               </SMemoWrapper>
             //完了の場合
@@ -42,11 +42,11 @@ export const TopPage = () => {
                 <STodo><strike>{list.todo}</strike></STodo>
                 <SDate><strike>{list.kijitsu}</strike></SDate>
                 <SButtonWrapper>
-                  <Link to={"/edit"} state={{todo: list.todo, kijitsu: list.kijitsu }}>
+                  <Link to={"/edit"} state={{id: list.id, todo: list.todo, date: list.kijitsu}}>
                     <SButton>編集</SButton>
                   </Link>
-                  <SButton onClick={ ()=> handleDelete(list.todo, list.kijitsu)}>削除</SButton>
-                  <SButton onClick={ ()=> handleDone(list.todo, list.kijitsu) } disabled>完了</SButton>
+                  <SButton onClick={ ()=> handleDelete(list.id)}>削除</SButton>
+                  <SButton onClick={ ()=> handleDone(list.id) } disabled>完了</SButton>
                 </SButtonWrapper>
               </SMemoWrapper>
             }
