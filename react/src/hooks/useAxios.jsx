@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 export const useAxios = () => {
   const navigate = useNavigate();
   const [todoList, setTodoList] = useState([]);
+  const [ errorMsg, setErrorMsg ] = useState("");
   
   //リスト取得
   const getList = () => {
@@ -29,7 +30,7 @@ export const useAxios = () => {
         navigate("../");
       })
       .catch((error) => {
-        console.log(error);
+        setErrorMsg(error.response.data.message);
       });
   }
   //編集メソッド
@@ -82,6 +83,7 @@ export const useAxios = () => {
 
   return {
     todoList,
+    errorMsg,
     setTodoList,
     getList,
     handleAdd,

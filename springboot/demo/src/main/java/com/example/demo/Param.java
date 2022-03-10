@@ -1,34 +1,54 @@
 package com.example.demo;
 
+import javax.persistence.Column;
+import javax.validation.constraints.NotEmpty;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Param {
 
-        private String todo;
-        private String kijitsu;
-        private String preTodo;
-        private String preKijitsu;
+    @NotEmpty
+    private String todo;
 
-        public String getTodo() {
-            return this.todo;
-        }
-        public void setTodo(String todo) {
-            this.todo = todo;
-        }
-        public String getKijitsu() {
-            return this.kijitsu;
-        }
-        public void setKijitsu(String kijitsu) {
-            this.kijitsu = kijitsu;
-        }
-        public String getPreTodo() {
-            return this.preTodo;
-        }
-        public void setPreTodo(String preTodo) {
-            this.preTodo = preTodo;
-        }
-        public String getPreKijitsu() {
-            return this.preKijitsu;
-        }
-        public void setPreKijitsu(String preKijitsu) {
-            this.preKijitsu = preKijitsu;
+    @Column(length = 50, nullable = true)
+    @DateTimeFormat(pattern =  "yyyy/MM/dd")
+    private String kijitsu;
+
+    @Column(nullable = true)
+    private String preTodo;
+
+    @Column(nullable = true)
+    private String preKijitsu;
+
+    public String getTodo() {
+        return this.todo;
+    }
+
+    public void setTodo(String todo) {
+        this.todo = todo;
+    }
+
+    public String getKijitsu() {
+        return this.kijitsu;
+    }
+
+    public void setKijitsu(String kijitsu) {
+        this.kijitsu = kijitsu;
+    }
+
+    public String getPreTodo() {
+        return this.preTodo;
+    }
+
+    public void setPreTodo(String preTodo) {
+        this.preTodo = preTodo;
+    }
+
+    public String getPreKijitsu() {
+        return this.preKijitsu;
+    }
+
+    public void setPreKijitsu(String preKijitsu) {
+        this.preKijitsu = preKijitsu;
     }
 }

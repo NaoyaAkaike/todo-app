@@ -6,7 +6,7 @@ import { useAxios } from "../hooks/useAxios";
 
 export const EditTodoPage = () => {
     const location = useLocation();
-    const { handleEdit } = useAxios();
+    const { errorMsg, handleEdit } = useAxios();
     const [todo, setTodo] = useStateIfMounted("");
     const [date, setDate] = useStateIfMounted("");
 
@@ -22,27 +22,36 @@ export const EditTodoPage = () => {
     const onChangeDate = (e) => {
         setDate(e.target.value);
     }
-
     return (
         <SContainer>
             <h1>ToDoリスト</h1>
             <SContentWrapper>
                 <SItemWrapper>
                     <STextbox>
-                        <p>Todo内容</p>
+                    <p>Todo内容</p>
+                        <SMessageWrapper>
                         <SInput
                             type="text"
                             value={todo}
                             onChange={onChangeTodo}
                         ></SInput>
+                        { (errorMsg==="01") | (errorMsg==="02")
+                        ? <SErrorMsg>内容を入力してください</SErrorMsg>
+                        : <SErrorMsg></SErrorMsg>}
+                        </SMessageWrapper>                        
                     </STextbox>
                     <STextbox>
                         <p>期日</p>
+                        <SMessageWrapper>
                         <SInput
                             type="text"
                             value={date}
                             onChange={onChangeDate}
                         ></SInput>
+                        { (errorMsg==="01") | (errorMsg==="03")
+                        ? <SErrorMsg>正しく入力してください（yyyy-MM-dd）</SErrorMsg>
+                        : <SErrorMsg> </SErrorMsg>}
+                        </SMessageWrapper>
                     </STextbox>
                     <SButtonWrapper>
                         <SLinkButton>
@@ -82,10 +91,19 @@ const STextbox = styled.div`
 display: flex;
 align-items: center;
 `
-const SInput = styled.input`
-width: 300px;
+const SMessageWrapper = styled.div`
+height: 70px;
 margin-right: 30px;
 margin-left: auto;
+`
+const SInput = styled.input`
+width: 300px;
+margin-top: 24px;
+`
+const SErrorMsg = styled.p`
+margin: 0px 0px;
+font-weight: normal;
+color: red;
 `
 const SButtonWrapper = styled.div`
 display: flex;

@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
+import javax.validation.constraints.NotEmpty;
 @Entity
 @Table(name = "todo_data")
 public class TodoData {
@@ -18,23 +19,57 @@ public class TodoData {
     @Column
     private long id;
 
-    @Column(length = 200, nullable = false)
+    @Column(length = 200)
+    @NotEmpty
     private String todo;
 
     @Column(nullable = true)
     private Date kijitsu;
 
-    @Column(length = 1, nullable = false)
+    @Column(length = 1)
     private Integer sts;
 
-    @Column(length = 1, nullable = false)
+    @Column(length = 1)
     private Integer delete_flg;
 
-    @Column(nullable = false)
+    @Column
     private Date created_date;
 
-    @Column(nullable = false)
+    @Column
     private Date updated_date;
+
+    private boolean isCompleted = true;     //データベースに登録されちゃってる（修正必要）
+    private boolean isDeleted = true;       //データベースに登録されちゃってる（修正必要）
+    public int boolToInt(boolean a) {
+        if(a)
+            return 1;
+            return 0;
+    }
+    //追加メソッド
+    public void add(String todo, Date kijitsu) {
+        setTodo(todo);
+        setKijitsu(kijitsu);
+        setSts(boolToInt(!isCompleted));
+        setDeleteFlg(boolToInt(!isDeleted));
+        setCreatedDate(Date.valueOf(LocalDate.now()));
+        setUpdatedDate(Date.valueOf(LocalDate.now()));
+    }
+    //編集メソッド
+    public void edit(String todo, Date kijitsu) {
+        setTodo(todo);
+        setKijitsu(kijitsu);
+        setUpdatedDate(Date.valueOf(LocalDate.now()));
+    }
+    //削除メソッド
+    public void delete() {
+        setDeleteFlg(boolToInt(isDeleted));
+        setUpdatedDate(Date.valueOf(LocalDate.now()));
+    }
+    //完了メソッド
+    public void complete() {
+        setSts(boolToInt(isCompleted));
+        setUpdatedDate(Date.valueOf(LocalDate.now()));
+    }
 
     // 以下アクセサ
     public long getId() {
