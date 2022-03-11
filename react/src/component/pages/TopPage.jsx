@@ -12,8 +12,8 @@ export const TopPage = () => {
     getList();
   }, []);
 
-  const displayItems = (todo, kijitsu, sts)=> {
-    if (sts === 1) {
+  const displayItems = (todo, kijitsu, isCompleted)=> {
+    if (isCompleted) {
       return (
         <><STodo><strike>{todo}</strike></STodo>
         <SDate><strike>{kijitsu}</strike></SDate></>
@@ -44,15 +44,15 @@ export const TopPage = () => {
             return (
               <li key={list.id}>
                 <SMemoWrapper>
-                  {displayItems(list.todo, list.kijitsu, list.sts)}
+                  {displayItems(list.todo, list.kijitsu, list.isCompleted)}
                   <SButtonWrapper>
                     <Link to={"/edit"} state={{ id: list.id, todo: list.todo, kijitsu: list.kijitsu }}>
                       <SButton>編集</SButton>
                     </Link>
                     <SButton onClick={() => handleDelete(list.id)}>削除</SButton>
-                    {list.sts === 0  //完了判定
-                      ? <SButton onClick={() => handleDone(list.id)}>完了</SButton>
-                      : <SButton onClick={() => handleDone(list.id)} disabled>完了</SButton>}
+                    {list.isCompleted  //完了判定
+                      ? <SButton onClick={() => handleDone(list.id)} disabled>完了</SButton>
+                      : <SButton onClick={() => handleDone(list.id)}>完了</SButton>}
                   </SButtonWrapper>
                 </SMemoWrapper>
                 {judgeDate(list.kijitsu)}

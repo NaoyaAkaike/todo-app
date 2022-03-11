@@ -18,5 +18,4 @@ public interface TodoDataRepository extends JpaRepository<TodoData, Long> {
     public List<TodoData> findByDeleteFlg(Integer deleteFlg);
     public Optional<TodoData> findById(Integer id);
     public Optional<TodoData> findByTodoAndKijitsu(String todo,Date date);    //使わない
-    
 }

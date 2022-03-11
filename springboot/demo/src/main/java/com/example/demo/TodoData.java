@@ -9,7 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
+
 @Entity
 @Table(name = "todo_data")
 public class TodoData {
@@ -38,14 +40,19 @@ public class TodoData {
     @Column(name = "updated_date")
     private Date updatedDate;
 
-    private boolean isCompleted = true;     //データベースに登録されちゃってる（修正必要）
-    private boolean isDeleted = true;       //データベースに登録されちゃってる（修正必要）
+    @Transient // データベースに登録されないため
+    private boolean isCompleted = true;
+
+    @Transient // データベースに登録されないため
+    private boolean isDeleted = true;
+
     public int boolToInt(boolean a) {
-        if(a)
+        if (a)
             return 1;
-            return 0;
+        return 0;
     }
-    //追加メソッド
+
+    // 追加メソッド
     public void add(String todo, Date kijitsu) {
         setTodo(todo);
         setKijitsu(kijitsu);
@@ -54,18 +61,21 @@ public class TodoData {
         setCreatedDate(Date.valueOf(LocalDate.now()));
         setUpdatedDate(Date.valueOf(LocalDate.now()));
     }
-    //編集メソッド
+
+    // 編集メソッド
     public void edit(String todo, Date kijitsu) {
         setTodo(todo);
         setKijitsu(kijitsu);
         setUpdatedDate(Date.valueOf(LocalDate.now()));
     }
-    //削除メソッド
+
+    // 削除メソッド
     public void delete() {
         setDeleteFlg(boolToInt(isDeleted));
         setUpdatedDate(Date.valueOf(LocalDate.now()));
     }
-    //完了メソッド
+
+    // 完了メソッド
     public void complete() {
         setSts(boolToInt(isCompleted));
         setUpdatedDate(Date.valueOf(LocalDate.now()));
