@@ -1,19 +1,13 @@
 import styled from "@emotion/styled";
-import { useCallback, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useCallback } from "react";
 import { useStateIfMounted } from "use-state-if-mounted";
 import { useAxios } from "../hooks/useAxios";
 
-export const EditTodoPage = () => {
-    const location = useLocation();
-    const { errorMsg, handleEdit } = useAxios();
+export const AddTodoPage = () => {
+
+    const { errorMsg, handleAdd } =useAxios();
     const [todo, setTodo] = useStateIfMounted("");
     const [date, setDate] = useStateIfMounted("");
-
-    useEffect(() => {
-        setTodo(location.state.todo);
-        setDate(location.state.kijitsu);
-    }, []);
 
     const onChangeTodo = (e) => {
         setTodo(e.target.value);
@@ -22,20 +16,22 @@ export const EditTodoPage = () => {
     const onChangeDate = (e) => {
         setDate(e.target.value);
     }
+    console.log(errorMsg);
+
     return (
         <SContainer>
             <h1>ToDoリスト</h1>
             <SContentWrapper>
                 <SItemWrapper>
                     <STextbox>
-                    <p>Todo内容</p>
+                        <p>Todo内容</p>
                         <SMessageWrapper>
                         <SInput
                             type="text"
                             value={todo}
                             onChange={onChangeTodo}
                         ></SInput>
-                        { (errorMsg==="01") | (errorMsg==="02")
+                        { (errorMsg==="01") | (errorMsg==="03")
                         ? <SErrorMsg>内容を入力してください</SErrorMsg>
                         : <SErrorMsg></SErrorMsg>}
                         </SMessageWrapper>                        
@@ -48,24 +44,17 @@ export const EditTodoPage = () => {
                             value={date}
                             onChange={onChangeDate}
                         ></SInput>
-                        { (errorMsg==="01") | (errorMsg==="03")
+                        { (errorMsg==="02") | (errorMsg==="03")
                         ? <SErrorMsg>正しく入力してください（yyyy-MM-dd）</SErrorMsg>
-                        : <SErrorMsg> </SErrorMsg>}
-                        </SMessageWrapper>
+                        : <SErrorMsg> </SErrorMsg>}                        
+                        </SMessageWrapper>                        
                     </STextbox>
                     <SButtonWrapper>
                         <SLinkButton>
-                            <SButton
-                                onClick={useCallback(()=>handleEdit(
-                                    location.state.id,
-                                    todo, date))}
-                            >編集</SButton>
+                            <SButton onClick={useCallback(()=> handleAdd(todo, date))}>登録</SButton>
                         </SLinkButton>
-
                     </SButtonWrapper>
-
                 </SItemWrapper>
-
             </SContentWrapper>
         </SContainer>
     );

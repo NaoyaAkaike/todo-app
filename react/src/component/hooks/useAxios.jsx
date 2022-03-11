@@ -50,7 +50,7 @@ export const useAxios = () => {
         navigate("../");
       })
       .catch((error) => {
-        console.log(error);
+        setErrorMsg(error.response.data.message);
       });
   }
   //削除メソッド

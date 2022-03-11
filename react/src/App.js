@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AddTodoPage } from "./pages/AddTodoPage";
-import { EditTodoPage } from "./pages/EditTodoPage";
-import { TopPage } from "./pages/TopPage";
+import { AddTodoPage } from "./component/pages/AddTodoPage";
+import { EditTodoPage } from "./component/pages/EditTodoPage";
+import { TopPage } from "./component/pages/TopPage";
 
 function App() {
   return (

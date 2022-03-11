@@ -17,7 +17,7 @@ public class TodoData {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
-    private long id;
+    private Integer id;
 
     @Column(length = 200)
     @NotEmpty
@@ -29,14 +29,14 @@ public class TodoData {
     @Column(length = 1)
     private Integer sts;
 
-    @Column(length = 1)
-    private Integer delete_flg;
+    @Column(name = "delete_flg", length = 1)
+    private Integer deleteFlg;
 
-    @Column
-    private Date created_date;
+    @Column(name = "created_date")
+    private Date createdDate;
 
-    @Column
-    private Date updated_date;
+    @Column(name = "updated_date")
+    private Date updatedDate;
 
     private boolean isCompleted = true;     //データベースに登録されちゃってる（修正必要）
     private boolean isDeleted = true;       //データベースに登録されちゃってる（修正必要）
@@ -72,11 +72,11 @@ public class TodoData {
     }
 
     // 以下アクセサ
-    public long getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -105,27 +105,27 @@ public class TodoData {
     }
 
     public Integer getDeleteFlg() {
-        return this.delete_flg;
+        return this.deleteFlg;
     }
 
-    public void setDeleteFlg(Integer delete_flg) {
-        this.delete_flg = delete_flg;
+    public void setDeleteFlg(Integer deleteFlg) {
+        this.deleteFlg = deleteFlg;
     }
 
     public Date getCreatedDate() {
-        return created_date;
+        return createdDate;
     }
 
-    public void setCreatedDate(Date created_date) {
-        this.created_date = created_date;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Date getUpdatedDate() {
-        return updated_date;
+        return updatedDate;
     }
 
-    public void setUpdatedDate(Date updated_date) {
-        this.updated_date = updated_date;
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
     }
 
 }

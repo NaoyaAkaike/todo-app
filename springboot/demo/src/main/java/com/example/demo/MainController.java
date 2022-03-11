@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Optional;
 
 import com.example.demo.repositories.TodoDataRepository;
@@ -30,7 +31,8 @@ public class MainController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     @Transactional
     public Iterable<TodoData> show() {
-        Iterable<TodoData> list = repository.findAll();
+        List<TodoData> list = repository.findByDeleteFlg(0);
+        //Iterable<TodoData> list = repository.findAll();
         return list;
     }
 
@@ -53,13 +55,13 @@ public class MainController {
             data.add(todo, kijitsu);
             repository.saveAndFlush(data);
             } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "02");        //todoがエラー
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "01");        //todoがエラー
             }
         } catch (DateTimeParseException dtp){
             if (!result.hasErrors()){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "03");        //kijitsuがエラー
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "02");        //kijitsuがエラー
             } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "01");        //両方エラー
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "03");        //両方エラー
             }
         }         
     }
@@ -68,19 +70,31 @@ public class MainController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @Transactional(readOnly = false)
     public void edit(@RequestBody @Validated Param param, BindingResult result) {
-        if (!result.hasErrors()) {
-            //受け取ったオブジェクト
-        int id = param.getId();
-        String todo = param.getTodo();
-        Date kijitsu = Date.valueOf(param.getKijitsu());
-        
-        //データベースに追加
-        Optional<TodoData> data = repository.findById((long) id);
-        data.get().edit(todo, kijitsu);
-        repository.saveAndFlush(data.get());
-        } else {
-            //エラー時の処理
-        }        
+
+        try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String str = dtf.format(LocalDate.parse(param.getKijitsu(), dtf));
+
+            if (!result.hasErrors()){
+                //受け取ったオブジェクト
+            int id = param.getId();
+            String todo = param.getTodo();
+            Date kijitsu = Date.valueOf(str);
+    
+            //データベースに追加
+            Optional<TodoData> data = repository.findById(id);
+            data.get().edit(todo, kijitsu);
+            repository.saveAndFlush(data.get());
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "01");        //todoがエラー
+            }
+        } catch (DateTimeParseException dtp){
+            if (!result.hasErrors()){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "02");        //kijitsuがエラー
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "03");        //両方エラー
+            }
+        }
     }
 
     //削除メソッド
@@ -89,7 +103,7 @@ public class MainController {
     public void delete(@RequestBody Param param) {
         int id = param.getId();
 
-        Optional<TodoData> data = repository.findById((long) id);
+        Optional<TodoData> data = repository.findById(id);
         data.get().delete();
         repository.saveAndFlush(data.get());
     }
@@ -100,7 +114,7 @@ public class MainController {
     public void done(@RequestBody Param param) {
         int id = param.getId();
 
-        Optional<TodoData> data = repository.findById((long) id);
+        Optional<TodoData> data = repository.findById(id);
         data.get().complete();
         repository.saveAndFlush(data.get());
     }    
