@@ -52,14 +52,16 @@ public class TodoData {
         return 0;
     }
 
-    // 追加メソッド
-    public void add(String todo, Date kijitsu) {
+    // コンストラクタ
+    public TodoData(String todo, Date kijitsu) {
         setTodo(todo);
         setKijitsu(kijitsu);
         setSts(boolToInt(!isCompleted));
         setDeleteFlg(boolToInt(!isDeleted));
         setCreatedDate(Date.valueOf(LocalDate.now()));
         setUpdatedDate(Date.valueOf(LocalDate.now()));
+    }
+    public TodoData() {
     }
 
     // 編集メソッド

@@ -12,7 +12,7 @@ public class TodoDataObj {
     // private Date updatedDate;
     private boolean isCompleted;
 
-    public void setDataToObj(TodoData data) {
+    public TodoDataObj(TodoData data) {
         setId(data.getId());
         setTodo(data.getTodo());
         setKijitsu(data.getKijitsu());
@@ -20,9 +20,7 @@ public class TodoDataObj {
     }
 
     public boolean intToBool(int a) {
-        if (a == 1)
-            return true;
-        return false;
+        return a==1;
     }
 
     // 以下アクセサ
