@@ -34,13 +34,13 @@ public class MainController {
     @Transactional
     public Iterable<TodoDataObj> show() {
         List<TodoData> dataList = repository.findByDeleteFlg(0);
-        
-        //TodoData型からTodoDataObj型に変換
+
+        // TodoData型からTodoDataObj型に変換
         List<TodoDataObj> list = new ArrayList<>();
-        for(TodoData data : dataList){
+        for (TodoData data : dataList) {
             TodoDataObj obj = new TodoDataObj(data);
             list.add(obj);
-        }        
+        }
         return list;
     }
 
@@ -49,31 +49,15 @@ public class MainController {
     @Transactional(readOnly = false)
     public void add(@RequestBody @Validated Param param, BindingResult result) {
 
-        boolean isDateFormatError = false;
-        String str = "";
-        //kijitsuのチェック
-        try {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            str = dtf.format(LocalDate.parse(param.getKijitsu(), dtf));
-        } catch(DateTimeParseException dtp) {
-            isDateFormatError = true;
-        }
+        errorCheck(param, result); // エラーがなかったら下に行く
 
-        if (isDateFormatError && result.hasErrors()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "03"); // 両方エラー
-        } else if (result.hasErrors()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "01"); // todoがエラー
-        } else if (isDateFormatError) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "02"); // kijitsuがエラー
-        } else {
-            // 受け取ったオブジェクト
-            String todo = param.getTodo();
-            Date kijitsu = Date.valueOf(str);
+        // 受け取ったオブジェクト
+        String todo = param.getTodo();
+        Date kijitsu = Date.valueOf(param.getKijitsu());
 
-            // データベースに追加
-            TodoData data = new TodoData(todo, kijitsu);
-            repository.saveAndFlush(data);
-        }
+        // データベースに追加
+        TodoData data = new TodoData(todo, kijitsu);
+        repository.saveAndFlush(data);
     }
 
     // 編集メソッド
@@ -81,31 +65,16 @@ public class MainController {
     @Transactional(readOnly = false)
     public void edit(@RequestBody @Validated Param param, BindingResult result) {
 
-        try {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            String str = dtf.format(LocalDate.parse(param.getKijitsu(), dtf));
+        errorCheck(param, result);
 
-            if (!result.hasErrors()) {
-                // 受け取ったオブジェクト
-                int id = param.getId();
-                String todo = param.getTodo();
-                Date kijitsu = Date.valueOf(str);
+        int id = param.getId();
+        String todo = param.getTodo();
+        Date kijitsu = Date.valueOf(param.getKijitsu());
 
-                // データベースに追加
-                Optional<TodoData> data = repository.findById(id);
-                data.get().edit(todo, kijitsu);
-                repository.saveAndFlush(data.get());
-
-            } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "01"); // todoがエラー
-            }
-        } catch (DateTimeParseException dtp) {
-            if (!result.hasErrors()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "02"); // kijitsuがエラー
-            } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "03"); // 両方エラー
-            }
-        }
+        // データベースに追加
+        Optional<TodoData> data = repository.findById(id);
+        data.get().edit(todo, kijitsu);
+        repository.saveAndFlush(data.get());
     }
 
     // 削除メソッド
@@ -128,5 +97,28 @@ public class MainController {
         Optional<TodoData> data = repository.findById(id);
         data.get().complete();
         repository.saveAndFlush(data.get());
+    }
+
+    // errorCheck
+    public void errorCheck(Param param, BindingResult result) {
+        boolean isDateFormatError = false;
+
+        // kijitsuのチェック
+        try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            dtf.format(LocalDate.parse(param.getKijitsu(), dtf));
+        } catch (DateTimeParseException dtp) {
+            isDateFormatError = true;
+        }
+
+        if (isDateFormatError && result.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "03"); // 両方エラー
+        }
+        if (result.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "01"); // todoがエラー
+        }
+        if (isDateFormatError) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "02"); // kijitsuがエラー
+        }
     }
 }
